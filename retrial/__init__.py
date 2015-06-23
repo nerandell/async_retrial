@@ -1,3 +1,2 @@
-__all__ = ['retry', 'RetryHandler']
+from .retrial.retry import retry
 
-from retrial.retrial.retry import RetryHandler, retry
