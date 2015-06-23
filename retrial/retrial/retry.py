@@ -45,7 +45,7 @@ class RetryHandler:
         attempt_made = 0
         if not asyncio.iscoroutinefunction(func):
             func = asyncio.coroutine(func)
-        yield from self._run_task(attempt_made, func, *args, **kwargs)
+        return (yield from self._run_task(attempt_made, func, *args, **kwargs))
 
     @asyncio.coroutine
     def _run_task(self, attempts_made, func, *args, **kwargs):
@@ -59,13 +59,16 @@ class RetryHandler:
                 try:
                     result = yield from asyncio.wait_for(func(*args, **kwargs), self._timeout)
                 except TimeoutError:
-                    yield from self._run_task(attempts_made + 1, func, *args, **kwargs)
-                    return
+                    return (yield from self._run_task(attempts_made + 1, func, *args, **kwargs))
             logger.info('Result retrieved from %s is %s', func.__name__, result)
             if self._should_retry_for_result(result):
-                yield from self._run_task(attempts_made + 1, func, *args, **kwargs)
+                return (yield from self._run_task(attempts_made + 1, func, *args, **kwargs))
+            else:
+                return result
 
         except Exception as e:
             logger.info('%s raised exception %s', func.__name__, e.__class__.__name__)
             if self._should_retry_for_exception(e):
                 yield from self._run_task(attempts_made + 1, func, *args, **kwargs)
+            else:
+                raise
