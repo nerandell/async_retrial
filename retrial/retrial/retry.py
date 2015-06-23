@@ -19,7 +19,6 @@ def retry(retry_for_result=_default_retry_for_result, retry_for_exception=_defau
         def wrapper(*args, **kwargs):
             yield from RetryHandler(retry_for_result, retry_for_exception, multiplier, timeout).run(func, *args,
                                                                                                     **kwargs)
-
         return wrapper
 
     return decorator
