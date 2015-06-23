@@ -29,7 +29,7 @@ def check_exception():
 
 @retry(timeout=2)
 def check_timeout():
-    yield from asyncio.sleep(1)
+    yield from asyncio.sleep(3)
     return
 
 

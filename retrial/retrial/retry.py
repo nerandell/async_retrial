@@ -12,16 +12,23 @@ def _default_retry_for_exception(exception):
     return False
 
 
-def retry(retry_for_result=_default_retry_for_result, retry_for_exception=_default_retry_for_exception, multiplier=2,
-          timeout=None):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            yield from RetryHandler(retry_for_result, retry_for_exception, multiplier, timeout).run(func, *args,
-                                                                                                    **kwargs)
-        return wrapper
+def retry(*dargs, **dkwargs):
+    if len(dargs) == 1 and callable(dargs[0]):
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                yield from RetryHandler().run(func, *args, **kwargs)
+            return wrapper
+        return decorator(dargs[0])
 
-    return decorator
+    else:
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                yield from RetryHandler(*dargs, **dkwargs).run(func, *args, **kwargs)
+            return wrapper
+
+        return decorator
 
 
 class RetryHandler:
