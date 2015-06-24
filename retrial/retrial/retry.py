@@ -34,11 +34,12 @@ def retry(*dargs, **dkwargs):
 class RetryHandler:
     def __init__(self, should_retry_for_result=_default_retry_for_result,
                  should_retry_for_exception=_default_retry_for_exception,
-                 multiplier=2, timeout=None):
+                 multiplier=2, timeout=None, max_attempts=None):
         self._should_retry_for_result = should_retry_for_result
         self._should_retry_for_exception = should_retry_for_exception
         self._multiplier = multiplier
         self._timeout = timeout
+        self._max_attempts = max_attempts
 
     @asyncio.coroutine
     def run(self, func, *args, **kwargs):
@@ -49,7 +50,9 @@ class RetryHandler:
 
     @asyncio.coroutine
     def _run_task(self, attempts_made, func, *args, **kwargs):
-        wait_time = self._multiplier ** attempts_made
+        if self._max_attempts is not None and attempts_made > self._max_attempts:
+            return
+        wait_time = self._multiplier ** attempts_made if attempts_made != 0 else 0
         logger.info('Retrying %s after %s seconds', func.__name__, wait_time)
         yield from asyncio.sleep(wait_time)
         try:

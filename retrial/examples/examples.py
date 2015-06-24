@@ -27,7 +27,7 @@ def check_exception():
     raise Exception('Dummy exception thrown')
 
 
-@retry(timeout=2)
+@retry(timeout=2, max_attempts=5)
 def check_timeout():
     yield from asyncio.sleep(3)
     return
