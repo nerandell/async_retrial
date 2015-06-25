@@ -27,12 +27,11 @@ def check_exception():
     raise Exception('Dummy exception thrown')
 
 
-@retry(timeout=2, max_attempts=5)
+@retry(timeout=2, strategy=[1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2])
 def check_timeout():
     yield from asyncio.sleep(3)
     return
 
 
 if __name__ == '__main__':
-    asyncio.async(check_timeout())
-    asyncio.get_event_loop().run_forever()
+    asyncio.get_event_loop().run_until_complete(check_timeout())
