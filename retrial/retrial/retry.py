@@ -70,7 +70,7 @@ class RetryHandler:
                 return result
 
         except Exception as e:
-            logger.info('%s raised exception %s', func.__name__, e.__class__.__name__)
+            logger.exception('%s raised exception %s', func.__name__, e.__class__.__name__)
             if self._should_retry_for_exception(e):
                 yield from self._run_task(attempts_made + 1, func, *args, **kwargs)
             else:
