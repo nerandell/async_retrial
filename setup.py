@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='async_retrial',
       version='0.4',
@@ -6,4 +6,5 @@ setup(name='async_retrial',
       author_email='ankitchandawala@gmail.com',
       url='https://github.com/nerandell/async_retrial',
       description='asyncio retrial library',
-      packages=['retrial.retrial'])
+      packages=find_packages(exclude=['retrial.examples', 'tests']),
+      zip_safe=False)
