@@ -2,4 +2,4 @@ language : python
 python:
     - "3.4"
 install: "pip install -r requirements.txt"
-script: py.test -q tests/tests.py -v
+script: py.test -v
