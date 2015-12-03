@@ -35,6 +35,19 @@ class RetryHandler:
     def __init__(self, should_retry_for_result=_default_retry_for_result,
                  should_retry_for_exception=_default_retry_for_exception,
                  multiplier=2, timeout=None, max_attempts=None, strategy=None):
+        """
+        :param should_retry_for_result: A function that is called with argument as result to allow retrial for specific
+                                        set of results. Must return a boolean value
+        :param should_retry_for_exception: A function that is called if the function to be retried threw an exception
+                                           allow retrial for specific set of exceptions. Must return a boolean value
+        :param multiplier: Must be an integer value, If defined, the retrial would be exponential with this behind the
+                           multiplier
+        :param timeout: If defined, the function will be retried if no result was returned in this time.
+        :param max_attempts: Max number of attempts to retry
+        :param strategy: Must be a list of integers. If defined, retrial would follow this strategy. For ex. if strategy
+                         is [1,3,5,8,11], function would be retried at 1, 3, 5, 8, 11, 11, 11, ... seconds
+        :return:
+        """
         self._should_retry_for_result = should_retry_for_result
         self._should_retry_for_exception = should_retry_for_exception
         self._multiplier = multiplier
