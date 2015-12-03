@@ -18,7 +18,9 @@ def retry(*dargs, **dkwargs):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 yield from RetryHandler().run(func, *args, **kwargs)
+
             return wrapper
+
         return decorator(dargs[0])
 
     else:
@@ -26,6 +28,7 @@ def retry(*dargs, **dkwargs):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 yield from RetryHandler(*dargs, **dkwargs).run(func, *args, **kwargs)
+
             return wrapper
 
         return decorator
@@ -91,7 +94,6 @@ class RetryHandler:
 
     def _get_wait_time(self, attempts_made):
         if self._strategy:
-            return self._strategy[min(attempts_made, len(self._strategy)-1)]
+            return self._strategy[min(attempts_made, len(self._strategy) - 1)]
         else:
             return self._multiplier ** attempts_made if attempts_made != 0 else 0
-
