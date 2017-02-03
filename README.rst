@@ -19,7 +19,7 @@ To install via pip
 
 .. code-block:: bash
 
-    $ pip install vyked
+    $ pip install async_retrial
     
 To install from source
 
